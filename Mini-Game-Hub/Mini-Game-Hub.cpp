@@ -154,16 +154,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PostQuitMessage(0);
             break;
         case ID_BUTTON_X:
-            MessageBox(hWnd, L"You have chosen the Snake game!\n\n   Your Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
+            MessageBox(hWnd, L"You have chosen the Snake game!\n\nYour Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
             SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
             break;
 
         case ID_BUTTON_Y:
-            MessageBox(hWnd, L"You have chosen the Tic Tac Toe Game!\n\n   Your Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
+            MessageBox(hWnd, L"You have chosen the Tic Tac Toe Game!\n\nYour Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
+            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
             break;
 
         case ID_BUTTON_Z:
-            MessageBox(hWnd, L"You have chosen the Number Guessing Game!\n\n   Your Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
+            MessageBox(hWnd, L"You have chosen the Number Guessing Game!\n\nYour Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
+            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
             break;
 
         case ID_BUTTON_PLAY:
