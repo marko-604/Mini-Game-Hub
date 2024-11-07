@@ -1,15 +1,21 @@
-// Mini-Game-Hub.cpp : Defines the entry point for the application.
-//
-
 #include "framework.h"
 #include "Mini-Game-Hub.h"
 
 #define MAX_LOADSTRING 100
 
+// Button IDs
+#define ID_BUTTON_MENU 1
+#define ID_BUTTON_QUIT 2
+#define ID_BUTTON_X 3
+#define ID_BUTTON_Y 4
+#define ID_BUTTON_Z 5
+
 // Global Variables:
-HINSTANCE hInst;                                // current instance
-WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
-WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+HINSTANCE hInst;
+WCHAR szTitle[MAX_LOADSTRING];
+WCHAR szWindowClass[MAX_LOADSTRING];
+HWND hButtonMenu, hButtonQuit, hButtonX, hButtonY, hButtonZ;
+bool isMenuScreen = true;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -17,43 +23,28 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+void switchScreen(HWND hWnd);
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-
-
-
-
-
-	// code for the main menu
-
-
-
-
-
-
-
-    // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_MINIGAMEHUB, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
-    // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;
     }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MINIGAMEHUB));
-
     MSG msg;
 
-    // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
@@ -63,114 +54,127 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
-    return (int) msg.wParam;
+    return (int)msg.wParam;
 }
 
-
-
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
-
     wcex.cbSize = sizeof(WNDCLASSEX);
-
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MINIGAMEHUB));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_MINIGAMEHUB);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = hInstance;
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MINIGAMEHUB));
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_MINIGAMEHUB);
+    wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
 }
 
-//
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//
-//   PURPOSE: Saves instance handle and creates main window
-//
-//   COMMENTS:
-//
-//        In this function, we save the instance handle in a global variable and
-//        create and display the main program window.
-//
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // Store instance handle in our global variable
+    hInst = hInstance;
+    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, 400, 300, nullptr, nullptr, hInstance, nullptr);
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+    if (!hWnd)
+    {
+        return FALSE;
+    }
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
-
-   return TRUE;
+    return TRUE;
 }
 
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE: Processes messages for the main window.
-//
-//  WM_COMMAND  - process the application menu
-//  WM_PAINT    - Paint the main window
-//  WM_DESTROY  - post a quit message and return
-//
-//
+void switchScreen(HWND hWnd)
+{
+    isMenuScreen = !isMenuScreen;
+
+    ShowWindow(hButtonMenu, isMenuScreen ? SW_SHOW : SW_HIDE);
+    ShowWindow(hButtonQuit, isMenuScreen ? SW_SHOW : SW_HIDE);
+
+    ShowWindow(hButtonX, !isMenuScreen ? SW_SHOW : SW_HIDE);
+    ShowWindow(hButtonY, !isMenuScreen ? SW_SHOW : SW_HIDE);
+    ShowWindow(hButtonZ, !isMenuScreen ? SW_SHOW : SW_HIDE);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_CREATE:
+    {
+        hButtonMenu = CreateWindowW(L"BUTTON", L"Menu", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+            150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_MENU, hInst, nullptr);
+
+        hButtonQuit = CreateWindowW(L"BUTTON", L"Quit", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+            175, 160, 50, 30, hWnd, (HMENU)ID_BUTTON_QUIT, hInst, nullptr);
+
+        hButtonX = CreateWindowW(L"BUTTON", L"Snake", WS_TABSTOP | WS_CHILD | BS_PUSHBUTTON,
+            50, 100, 50, 30, hWnd, (HMENU)ID_BUTTON_X, hInst, nullptr);
+
+        hButtonY = CreateWindowW(L"BUTTON", L"Tic Tac Toe", WS_TABSTOP | WS_CHILD | BS_PUSHBUTTON,
+            110, 100, 90, 30, hWnd, (HMENU)ID_BUTTON_Y, hInst, nullptr);
+
+        hButtonZ = CreateWindowW(L"BUTTON", L"Number Guessing", WS_TABSTOP | WS_CHILD | BS_PUSHBUTTON,
+            210, 100, 130, 30, hWnd, (HMENU)ID_BUTTON_Z, hInst, nullptr);
+
+        // Hide the menu buttons initially
+        ShowWindow(hButtonX, SW_HIDE);
+        ShowWindow(hButtonY, SW_HIDE);
+        ShowWindow(hButtonZ, SW_HIDE);
+    }
+    break;
+
     case WM_COMMAND:
+    {
+        int wmId = LOWORD(wParam);
+        switch (wmId)
         {
-            int wmId = LOWORD(wParam);
-            // Parse the menu selections:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
+        case ID_BUTTON_MENU:
+            switchScreen(hWnd);
+            break;
+        case ID_BUTTON_QUIT:
+            PostQuitMessage(0);
+            break;
+        case ID_BUTTON_X: MessageBox(hWnd, L"You have chosen the Sake game!\n\n   Your Game Will Start Soon!", L"Info", MB_OK);break;
+
+        case ID_BUTTON_Y: MessageBox(hWnd, L"You have chosen the TicTacToe Game!\n\n   Your Game Will Start Soon!", L"Info", MB_OK);break;
+
+		case ID_BUTTON_Z:MessageBox(hWnd, L"You have chosen the Number Guessing Game!\n\n   Your Game Will Start Soon!", L"Info", MB_OK); break;
+
+            break;
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
         }
-        break;
+    }
+    break;
+
     case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
-            EndPaint(hWnd, &ps);
-        }
-        break;
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);
+        EndPaint(hWnd, &ps);
+    }
+    break;
+
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }
 
-// Message handler for about box.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
