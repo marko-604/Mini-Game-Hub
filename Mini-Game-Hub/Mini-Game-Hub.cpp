@@ -9,12 +9,16 @@
 #define ID_BUTTON_X 3
 #define ID_BUTTON_Y 4
 #define ID_BUTTON_Z 5
+#define ID_BUTTON_PLAY 6
+
+// Timer ID
+#define ID_TIMER_LAUNCH_GAME 101
 
 // Global Variables:
 HINSTANCE hInst;
 WCHAR szTitle[MAX_LOADSTRING];
 WCHAR szWindowClass[MAX_LOADSTRING];
-HWND hButtonMenu, hButtonQuit, hButtonX, hButtonY, hButtonZ;
+HWND hButtonMenu, hButtonQuit, hButtonX, hButtonY, hButtonZ, hButtonPlay;
 bool isMenuScreen = true;
 
 // Forward declarations of functions included in this code module:
@@ -105,6 +109,12 @@ void switchScreen(HWND hWnd)
     ShowWindow(hButtonZ, !isMenuScreen ? SW_SHOW : SW_HIDE);
 }
 
+void CreatePlayWindow(HWND hWnd)
+{
+    hButtonPlay = CreateWindowW(L"BUTTON", L"Play", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+        150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_PLAY, hInst, nullptr);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -126,7 +136,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         hButtonZ = CreateWindowW(L"BUTTON", L"Number Guessing", WS_TABSTOP | WS_CHILD | BS_PUSHBUTTON,
             210, 100, 130, 30, hWnd, (HMENU)ID_BUTTON_Z, hInst, nullptr);
 
-        // Hide the menu buttons initially
         ShowWindow(hButtonX, SW_HIDE);
         ShowWindow(hButtonY, SW_HIDE);
         ShowWindow(hButtonZ, SW_HIDE);
@@ -144,18 +153,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case ID_BUTTON_QUIT:
             PostQuitMessage(0);
             break;
-        case ID_BUTTON_X: MessageBox(hWnd, L"You have chosen the Sake game!\n\n   Your Game Will Start Soon!", L"Info", MB_OK);break;
-
-        case ID_BUTTON_Y: MessageBox(hWnd, L"You have chosen the TicTacToe Game!\n\n   Your Game Will Start Soon!", L"Info", MB_OK);break;
-
-		case ID_BUTTON_Z:MessageBox(hWnd, L"You have chosen the Number Guessing Game!\n\n   Your Game Will Start Soon!", L"Info", MB_OK); break;
-
+        case ID_BUTTON_X:
+            MessageBox(hWnd, L"You have chosen the Snake game!\n\n   Your Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
+            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
             break;
+
+        case ID_BUTTON_Y:
+            MessageBox(hWnd, L"You have chosen the Tic Tac Toe Game!\n\n   Your Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
+            break;
+
+        case ID_BUTTON_Z:
+            MessageBox(hWnd, L"You have chosen the Number Guessing Game!\n\n   Your Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
+            break;
+
+        case ID_BUTTON_PLAY:
+            MessageBox(hWnd, L"Starting the game!", L"Info", MB_OK);
+            break;
+
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
         }
     }
     break;
+
+    case WM_TIMER:
+        if (wParam == ID_TIMER_LAUNCH_GAME)
+        {
+            KillTimer(hWnd, ID_TIMER_LAUNCH_GAME); // Stop the timer
+            CreatePlayWindow(hWnd); // Create the Play button window
+            ShowWindow(hButtonX, SW_HIDE);
+            ShowWindow(hButtonY, SW_HIDE);
+            ShowWindow(hButtonZ, SW_HIDE);
+        }
+        break;
 
     case WM_PAINT:
     {
