@@ -162,7 +162,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             MessageBox(hWnd, L"You have chosen the Tic Tac Toe Game!\n\nYour Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
             SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
             break;
-
+             
         case ID_BUTTON_Z:
             MessageBox(hWnd, L"You have chosen the Number Guessing Game!\n\nYour Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
             SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
