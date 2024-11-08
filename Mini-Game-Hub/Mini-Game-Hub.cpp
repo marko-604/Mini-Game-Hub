@@ -29,6 +29,7 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 void switchScreen(HWND hWnd);
+bool showBackground = false;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -125,7 +126,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CREATE:
     {
         hBackgroundBitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BACKGROUND_IMAGE));
-
         hButtonMenu = CreateWindowW(L"BUTTON", L"Menu", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
             150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_MENU, hInst, nullptr);
 
@@ -177,8 +177,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         case ID_BUTTON_PLAY:
+            showBackground = true;
+            InvalidateRect(hWnd, NULL, TRUE);  // Request a repaint of the window
             MessageBox(hWnd, L"Starting the game!", L"Info", MB_OK);
             break;
+
 
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -202,7 +205,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
 
-        if (hBackgroundBitmap)
+        if (showBackground && hBackgroundBitmap)
         {
             HDC hdcMem = CreateCompatibleDC(hdc);
             HBITMAP hbmOld = (HBITMAP)SelectObject(hdcMem, hBackgroundBitmap);
@@ -211,7 +214,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             BITMAP bitmap;
             GetObject(hBackgroundBitmap, sizeof(BITMAP), &bitmap);
 
-            // Draw the bitmap at the specified coordinates (0,0 to cover the entire window)
+            // Draw the bitmap
             BitBlt(hdc, 0, 0, bitmap.bmWidth, bitmap.bmHeight, hdcMem, 0, 0, SRCCOPY);
 
             // Cleanup
@@ -222,6 +225,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         EndPaint(hWnd, &ps);
     }
     break;
+
 
     break;
 
