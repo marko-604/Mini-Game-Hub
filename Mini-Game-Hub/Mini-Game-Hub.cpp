@@ -29,7 +29,6 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 void switchScreen(HWND hWnd);
-bool showBackground = false;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -119,20 +118,19 @@ void CreatePlayWindow(HWND hWnd)
 }
 HBITMAP hBackgroundBitmap;
 
+bool showBackground = false;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
     case WM_CREATE:
     {
-        hBackgroundBitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BACKGROUND_IMAGE));
-        hButtonMenu = CreateWindowW(L"BUTTON", L"Menu", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
-            150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_MENU, hInst, nullptr);
+      hBackgroundBitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BACKGROUND_IMAGE));
 
         hButtonMenu = CreateWindowW(L"BUTTON", L"Menu", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
             150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_MENU, hInst, nullptr);
 
-        hButtonQuit = CreateWindowW(L"BUTTON", L"Quit", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+           hButtonQuit = CreateWindowW(L"BUTTON", L"Quit", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
             175, 160, 50, 30, hWnd, (HMENU)ID_BUTTON_QUIT, hInst, nullptr);
 
         hButtonX = CreateWindowW(L"BUTTON", L"Snake", WS_TABSTOP | WS_CHILD | BS_PUSHBUTTON,
@@ -177,11 +175,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         case ID_BUTTON_PLAY:
-            showBackground = true;
-            InvalidateRect(hWnd, NULL, TRUE);  // Request a repaint of the window
             MessageBox(hWnd, L"Starting the game!", L"Info", MB_OK);
             break;
-
 
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -193,6 +188,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         if (wParam == ID_TIMER_LAUNCH_GAME)
         {
             KillTimer(hWnd, ID_TIMER_LAUNCH_GAME); // Stop the timer
+			showBackground = true;
+            InvalidateRect(hWnd, NULL, TRUE);
             CreatePlayWindow(hWnd); // Create the Play button window
             ShowWindow(hButtonX, SW_HIDE);
             ShowWindow(hButtonY, SW_HIDE);
