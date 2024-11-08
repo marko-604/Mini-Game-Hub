@@ -11,6 +11,7 @@
 #define IDM_EXIT				105
 #define IDI_MINIGAMEHUB			107
 #define IDB_BACKGROUND_IMAGE 101
+#define MENU_BACKGROUND 101
 #define IDI_SMALL				108
 #define IDC_MINIGAMEHUB			109
 #define IDC_MYICON				2

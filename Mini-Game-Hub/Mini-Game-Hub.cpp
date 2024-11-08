@@ -117,7 +117,7 @@ void CreatePlayWindow(HWND hWnd)
 
 }
 HBITMAP hBackgroundBitmap;
-
+HBITMAP menubackgroundbitmap;
 bool showBackground = false;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -125,6 +125,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
     {
+	  menubackgroundbitmap = LoadBitmap(hInst, MAKEINTRESOURCE(MENU_BACKGROUND));
       hBackgroundBitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BACKGROUND_IMAGE));
 
         hButtonMenu = CreateWindowW(L"BUTTON", L"Menu", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
