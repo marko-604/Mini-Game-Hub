@@ -85,7 +85,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance;
     HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, 400, 300, nullptr, nullptr, hInstance, nullptr);
+        CW_USEDEFAULT, 0, 900, 600, nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd)
     {
@@ -113,7 +113,7 @@ void switchScreen(HWND hWnd)
 void CreatePlayWindow(HWND hWnd)
 {
     hButtonPlay = CreateWindowW(L"BUTTON", L"Play", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
-        150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_PLAY, hInst, nullptr);
+        390, 300, 100, 50, hWnd, (HMENU)ID_BUTTON_PLAY, hInst, nullptr);
 
 }
 HBITMAP hBackgroundBitmap;
@@ -128,19 +128,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       hBackgroundBitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BACKGROUND_IMAGE));
 
         hButtonMenu = CreateWindowW(L"BUTTON", L"Menu", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
-            150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_MENU, hInst, nullptr);
+            400, 300, 100, 50, hWnd, (HMENU)ID_BUTTON_MENU, hInst, nullptr);
 
            hButtonQuit = CreateWindowW(L"BUTTON", L"Quit", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
-            175, 160, 50, 30, hWnd, (HMENU)ID_BUTTON_QUIT, hInst, nullptr);
+            425, 380, 50, 30, hWnd, (HMENU)ID_BUTTON_QUIT, hInst, nullptr);
 
         hButtonX = CreateWindowW(L"BUTTON", L"Snake", WS_TABSTOP | WS_CHILD | BS_PUSHBUTTON,
-            50, 100, 50, 30, hWnd, (HMENU)ID_BUTTON_X, hInst, nullptr);
+            250, 300, 80, 60, hWnd, (HMENU)ID_BUTTON_X, hInst, nullptr);
 
         hButtonY = CreateWindowW(L"BUTTON", L"Tic Tac Toe", WS_TABSTOP | WS_CHILD | BS_PUSHBUTTON,
-            110, 100, 90, 30, hWnd, (HMENU)ID_BUTTON_Y, hInst, nullptr);
+            340, 300, 150, 60, hWnd, (HMENU)ID_BUTTON_Y, hInst, nullptr);
 
         hButtonZ = CreateWindowW(L"BUTTON", L"Number Guessing", WS_TABSTOP | WS_CHILD | BS_PUSHBUTTON,
-            210, 100, 130, 30, hWnd, (HMENU)ID_BUTTON_Z, hInst, nullptr);
+            510, 300, 190, 60, hWnd, (HMENU)ID_BUTTON_Z, hInst, nullptr);
 
         ShowWindow(hButtonX, SW_HIDE);
         ShowWindow(hButtonY, SW_HIDE);
