@@ -162,21 +162,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         case ID_BUTTON_X:
             MessageBox(hWnd, L"You have chosen the Snake game!\n\nYour Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
-            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
+            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL);
             break;
 
         case ID_BUTTON_Y:
             MessageBox(hWnd, L"You have chosen the Tic Tac Toe Game!\n\nYour Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
-            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
+            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL);
             break;
              
         case ID_BUTTON_Z:
             MessageBox(hWnd, L"You have chosen the Number Guessing Game!\n\nYour Game Will Start Soon!\n\nClick { ok }", L"Info", MB_OK);
-            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); // Start a 3-second timer
+            SetTimer(hWnd, ID_TIMER_LAUNCH_GAME, 3000, NULL); 
             break;
 
         case ID_BUTTON_PLAY:
-            MessageBox(hWnd, L"Starting the game!", L"Info", MB_OK);
+            ShowWindow(hButtonPlay, SW_HIDE);
+            // TO DO -----------------------------------------
+            // 
+			// start the game, grid appears, snake appears, snake "emoji" disappears, apples appear.
+
             break;
 
         default:
@@ -202,6 +206,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
+
+        if (menubackgroundbitmap) {
+			HDC hdcMem = CreateCompatibleDC(hdc);
+			HBITMAP hbmOld = (HBITMAP)SelectObject(hdcMem, menubackgroundbitmap);
+
+			// Get bitmap dimensions
+			BITMAP bitmap;
+			GetObject(menubackgroundbitmap, sizeof(BITMAP), &bitmap);
+
+			// Draw the bitmap
+			BitBlt(hdc, 0, 0, bitmap.bmWidth, bitmap.bmHeight, hdcMem, 0, 0, SRCCOPY);
+
+			// Cleanup
+			SelectObject(hdcMem, hbmOld);
+			DeleteDC(hdcMem);
+        }
+
 
         if (showBackground && hBackgroundBitmap)
         {
@@ -230,6 +251,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         if (hBackgroundBitmap)
             DeleteObject(hBackgroundBitmap);
+            DeleteObject(menubackgroundbitmap);
         PostQuitMessage(0);
         break;
 

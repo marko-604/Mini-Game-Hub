@@ -48,5 +48,8 @@
     <Image Include="snake.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\menu.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

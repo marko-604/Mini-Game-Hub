@@ -139,6 +139,7 @@
     <ResourceCompile Include="Mini-Game-Hub.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\menu.bmp" />
     <Image Include="Mini-Game-Hub.ico" />
     <Image Include="small.ico" />
     <Image Include="snake.bmp" />
