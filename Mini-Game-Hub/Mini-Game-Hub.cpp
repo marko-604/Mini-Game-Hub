@@ -111,9 +111,17 @@ void switchScreen(HWND hWnd)
 
 void CreatePlayWindow(HWND hWnd)
 {
-    hButtonPlay = CreateWindowW(L"BUTTON", L"Play", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+    // Create the Play button
+    hButtonPlay = CreateWindowW(L"BUTTON", L"", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_BITMAP,
         150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_PLAY, hInst, nullptr);
+
+    // Load the bitmap image from resources
+    HBITMAP hBitmapPlay = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_PLAY_BUTTON_BG));
+
+    // Set the loaded bitmap as the button's background image
+    SendMessage(hButtonPlay, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmapPlay);
 }
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -199,6 +207,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_DESTROY:
         PostQuitMessage(0);
+
         break;
 
     default:
