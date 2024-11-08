@@ -1,5 +1,6 @@
 #include "framework.h"
 #include "Mini-Game-Hub.h"
+#include "resource.h"
 
 #define MAX_LOADSTRING 100
 
@@ -111,17 +112,11 @@ void switchScreen(HWND hWnd)
 
 void CreatePlayWindow(HWND hWnd)
 {
-    // Create the Play button
-    hButtonPlay = CreateWindowW(L"BUTTON", L"", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_BITMAP,
+    hButtonPlay = CreateWindowW(L"BUTTON", L"Play", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
         150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_PLAY, hInst, nullptr);
 
-    // Load the bitmap image from resources
-    HBITMAP hBitmapPlay = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_PLAY_BUTTON_BG));
-
-    // Set the loaded bitmap as the button's background image
-    SendMessage(hButtonPlay, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmapPlay);
 }
-
+HBITMAP hBackgroundBitmap;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -129,6 +124,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
     {
+        hBackgroundBitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BACKGROUND_IMAGE));
+
+        hButtonMenu = CreateWindowW(L"BUTTON", L"Menu", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+            150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_MENU, hInst, nullptr);
+
         hButtonMenu = CreateWindowW(L"BUTTON", L"Menu", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
             150, 100, 100, 50, hWnd, (HMENU)ID_BUTTON_MENU, hInst, nullptr);
 
@@ -201,14 +201,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
+
+        if (hBackgroundBitmap)
+        {
+            HDC hdcMem = CreateCompatibleDC(hdc);
+            HBITMAP hbmOld = (HBITMAP)SelectObject(hdcMem, hBackgroundBitmap);
+
+            // Get bitmap dimensions
+            BITMAP bitmap;
+            GetObject(hBackgroundBitmap, sizeof(BITMAP), &bitmap);
+
+            // Draw the bitmap at the specified coordinates (0,0 to cover the entire window)
+            BitBlt(hdc, 0, 0, bitmap.bmWidth, bitmap.bmHeight, hdcMem, 0, 0, SRCCOPY);
+
+            // Cleanup
+            SelectObject(hdcMem, hbmOld);
+            DeleteDC(hdcMem);
+        }
+
         EndPaint(hWnd, &ps);
     }
     break;
 
-    case WM_DESTROY:
-        PostQuitMessage(0);
+    break;
 
+    case WM_DESTROY:
+        if (hBackgroundBitmap)
+            DeleteObject(hBackgroundBitmap);
+        PostQuitMessage(0);
         break;
+
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
