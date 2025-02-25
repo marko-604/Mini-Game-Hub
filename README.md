@@ -30,7 +30,7 @@ The project provides a simple UI with buttons to navigate between the menu and g
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/Mini-Game-Hub.git
+   https://github.com/marko-604/Mini-Game-Hub.git
    cd Mini-Game-Hub
    ```
 2. Open the project in your preferred IDE (Visual Studio recommended).
