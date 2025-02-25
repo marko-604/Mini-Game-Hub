@@ -51,14 +51,7 @@ The project provides a simple UI with buttons to navigate between the menu and g
 - **Game Buttons:** Selects and starts a game.
 - **Play Button:** Initiates the game logic.
 
-## Code Structure
 
-- **`wWinMain`**: Entry point for the application.
-- **`WndProc`**: Main window procedure handling UI events.
-- **`switchScreen`**: Toggles between menu and game selection screens.
-- **`CreatePlayWindow`**: Creates the "Play" button dynamically.
-- **`WM_PAINT`**: Handles background rendering using bitmaps.
-- **`WM_TIMER`**: Launches the selected game after a delay.
 
 ## Future Enhancements
 
@@ -67,19 +60,10 @@ The project provides a simple UI with buttons to navigate between the menu and g
 - Improving UI design with custom graphics.
 - Expanding the game library.
 
-## License
 
-This project is licensed under the MIT License.
-
-## Contributing
-
-Pull requests are welcome! For major changes, please open an issue first to discuss the proposed modifications.
 
 ## Contact
 
 For any questions or suggestions, feel free to reach out via GitHub issues.
 
 ---
-
-Enjoy gaming with **Mini-Game Hub**! 🎮
-
